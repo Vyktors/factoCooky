@@ -1,0 +1,10 @@
+1
+chocolat 81
+double_chocolat 55
+triple_chocolat 8
+&
+2
+pepittes_de_chocolat 95
+beurre_d'arachide 39
+avoine 17
+&
