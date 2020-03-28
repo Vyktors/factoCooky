@@ -7,13 +7,14 @@ class Commande
 {
 private:
 	int numCommande;
+	int temps;
 
 public:
 	std::list<LotDeBiscuits> lots;
 
 	//Constructeur
 	Commande();
-	Commande(int);
+	Commande(int, int);
 
 	//Destructeur
 	~Commande();
@@ -21,7 +22,9 @@ public:
 	//Accesseurs
 	//Getters
 	int GetNumCommande();
+	int GetTemps();
 
 	//Setters
 	void SetNumCommande(int);
+	void SetTemps(int);
 };

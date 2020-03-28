@@ -8,3 +8,9 @@ pepittes_de_chocolat 95
 beurre_d'arachide 39
 avoine 17
 &
+3
+chocolat 10
+avoine 15
+double_chocolat 5
+beurre_d'arachide 20
+&

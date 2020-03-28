@@ -8,6 +8,7 @@
 #include <string>
 #include <fstream>
 #include <list> 
+#include <iomanip>
 
 class ListeCommandes {
 public:
@@ -18,6 +19,12 @@ public:
 	void simulation();
 	void chargerRecettes(string);
 	void uniteSuivante(string, LotDeBiscuits);
+	void ajouterTempsCommande(int, int);
+	void tempsMoyen();
+	void tempsCommandePlusLongue();
+	void commandeRapide();
+	void unitePlusUtilisee();
+	void uniteMoinsUtilisee();
 	
 
 private:
@@ -29,4 +36,9 @@ private:
 	UniteDeProduction melange = UniteDeProduction("Mélange");
 	UniteDeProduction cuisson = UniteDeProduction("Cuisson");
 	UniteDeProduction emballage = UniteDeProduction("Emballage");
+	int preparationUtilisation = 0;
+	int melangeUtilisation = 0;
+	int cuissonUtilisation = 0;
+	int emballageUtilisation = 0;
+	bool excepetion = false;
 };

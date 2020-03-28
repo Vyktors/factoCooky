@@ -8,12 +8,15 @@ class LotDeBiscuits
 private:
 	string type;
 	int quantite;
+	bool dernier;
+	int commandeAssocie;
+
 public:
 	std::list <string> etapes;
 
 	//Constructeur
 	LotDeBiscuits();
-	LotDeBiscuits(string, int);
+	LotDeBiscuits(string, int, bool, int);
 
 	//Destructeur
 	~LotDeBiscuits();
@@ -22,8 +25,12 @@ public:
 	//Getters
 	string GetType();
 	int GetQuantite();
+	bool GetDernier();
+	int GetCommandeAssocie();
 
 	//Setters
 	void SetType(string);
 	void SetQuantite(int);
+	void SetDernier(bool);
+	void SetCommandeAssocie(int);
 };
