@@ -25,6 +25,7 @@ public:
 	void commandeRapide();
 	void unitePlusUtilisee();
 	void uniteMoinsUtilisee();
+	int ajouterCompteurLot(int);
 	
 
 private:
@@ -41,4 +42,6 @@ private:
 	int cuissonUtilisation = 0;
 	int emballageUtilisation = 0;
 	bool excepetion = false;
+	int compteurTemp = 0;
+	int compteurCommande = 0;
 };

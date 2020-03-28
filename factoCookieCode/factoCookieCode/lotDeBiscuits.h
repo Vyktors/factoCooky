@@ -8,7 +8,7 @@ class LotDeBiscuits
 private:
 	string type;
 	int quantite;
-	bool dernier;
+	int nbLotParCommande;
 	int commandeAssocie;
 
 public:
@@ -16,7 +16,7 @@ public:
 
 	//Constructeur
 	LotDeBiscuits();
-	LotDeBiscuits(string, int, bool, int);
+	LotDeBiscuits(string, int, int, int);
 
 	//Destructeur
 	~LotDeBiscuits();
@@ -25,12 +25,12 @@ public:
 	//Getters
 	string GetType();
 	int GetQuantite();
-	bool GetDernier();
+	int GetNbLotParCommande();
 	int GetCommandeAssocie();
 
 	//Setters
 	void SetType(string);
 	void SetQuantite(int);
-	void SetDernier(bool);
+	void SetNbLotParCommande(int);
 	void SetCommandeAssocie(int);
 };

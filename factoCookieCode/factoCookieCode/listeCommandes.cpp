@@ -50,7 +50,7 @@ void ListeCommandes::chargerCommandes(string nomFichierCommandes)
 						ligne.erase(0, pos + delimiter.length());
 					}
 					try {
-						lotTemp = LotDeBiscuits(token, std::stoi(ligne), false, numCommandeTemp);
+						lotTemp = LotDeBiscuits(token, std::stoi(ligne), 0, numCommandeTemp);
 					}
 					catch (std::invalid_argument const& e) {
 						cout << "Impossible de convertir un string en int.";
@@ -63,7 +63,10 @@ void ListeCommandes::chargerCommandes(string nomFichierCommandes)
 		}
 
 		for (itC = listeCommandes.begin(); itC != listeCommandes.end(); itC++) {
-			(*itC).lots.back().SetDernier(true);
+			(*itC).SetSize((*itC).lots.size());
+			for (itLDB = (*itC).lots.begin(); itLDB != (*itC).lots.end(); itLDB++) {
+				(*itLDB).SetNbLotParCommande((*itC).lots.size());
+			}
 		}
 	}
 	fichierCommandes.close();
@@ -130,6 +133,7 @@ void ListeCommandes::simulation() {
 	while (!fin) {
 
 		fin = true;
+		// Envoyer le premier lot de chaque commande à leur première étape toutes les 15 minutes afin de ne pas surcharger les files.
 		for (itC = listeCommandes.begin(); itC != listeCommandes.end(); itC++){
 			if (!(*itC).lots.empty())
 			{
@@ -143,11 +147,17 @@ void ListeCommandes::simulation() {
 		}
 		if (!emballage.file.empty())
 		{
-			if (emballage.file.front().GetDernier() == true && emballage.file.front().etapes.size() == 0) {
+			compteurTemp = 0;
+			if (emballage.file.front().etapes.size() == 0) {
+				compteurTemp = ajouterCompteurLot(emballage.file.front().GetCommandeAssocie());
+				cout << "Le lot de biscuit " << emballage.file.front().GetType() << " de la commande " << emballage.file.front().GetCommandeAssocie() <<
+					" est terminee." << endl;
+			}
+			if (compteurTemp == emballage.file.front().GetNbLotParCommande()) {
 				ajouterTempsCommande(min + 15, emballage.file.front().GetCommandeAssocie());
+				compteurCommande++;
 				cout << "La commande " << emballage.file.front().GetCommandeAssocie() << " est completee." << endl;
 			}
-			
 			if (!emballage.file.front().etapes.empty())
 			{
 				cout << "Le lot de biscuit " << emballage.file.front().GetType() << " de la commande " << emballage.file.front().GetCommandeAssocie() <<
@@ -165,8 +175,15 @@ void ListeCommandes::simulation() {
 		}
 		if (!cuisson.file.empty() && excepetion == false)
 		{
-			if (cuisson.file.front().GetDernier() == true && cuisson.file.front().etapes.size() == 0) {
+			compteurTemp = 0;
+			if (cuisson.file.front().etapes.size() == 0) {
+				compteurTemp = ajouterCompteurLot(cuisson.file.front().GetCommandeAssocie());
+				cout << "Le lot de biscuit " << cuisson.file.front().GetType() << " de la commande " << cuisson.file.front().GetCommandeAssocie() <<
+					" est terminee." << endl;
+			}
+			if (compteurTemp == cuisson.file.front().GetNbLotParCommande()) {
 				ajouterTempsCommande(min + 15, cuisson.file.front().GetCommandeAssocie());
+				compteurCommande++;
 				cout << "La commande " << cuisson.file.front().GetCommandeAssocie() << " est completee." << endl;
 			}
 			if (!cuisson.file.front().etapes.empty())
@@ -186,8 +203,15 @@ void ListeCommandes::simulation() {
 		}
 		if (!melange.file.empty() && excepetion == false)
 		{
-			if (melange.file.front().GetDernier() == true && melange.file.front().etapes.size() == 0) {
+			compteurTemp = 0;
+			if (melange.file.front().etapes.size() == 0) {
+				compteurTemp = ajouterCompteurLot(melange.file.front().GetCommandeAssocie());
+				cout << "Le lot de biscuit " << melange.file.front().GetType() << " de la commande " << melange.file.front().GetCommandeAssocie() <<
+					" est terminee." << endl;
+			}
+			if (compteurTemp == melange.file.front().GetNbLotParCommande()) {
 				ajouterTempsCommande(min + 15, melange.file.front().GetCommandeAssocie());
+				compteurCommande++;
 				cout << "La commande " << melange.file.front().GetCommandeAssocie() << " est completee." << endl;
 			}
 			if (!melange.file.front().etapes.empty())
@@ -207,8 +231,15 @@ void ListeCommandes::simulation() {
 		}
 		if (!preparation.file.empty() && excepetion == false)
 		{
-			if (preparation.file.front().GetDernier() == true && preparation.file.front().etapes.size() == 0) {
+			compteurTemp = 0;
+			if (preparation.file.front().etapes.size() == 0) {
+				compteurTemp = ajouterCompteurLot(preparation.file.front().GetCommandeAssocie());
+				cout << "Le lot de biscuit " << preparation.file.front().GetType() << " de la commande " << preparation.file.front().GetCommandeAssocie() <<
+					" est terminee."<<endl;
+			}
+			if (compteurTemp == preparation.file.front().GetNbLotParCommande()) {
 				ajouterTempsCommande(min + 15, preparation.file.front().GetCommandeAssocie());
+				compteurCommande++;
 				cout << "La commande " << preparation.file.front().GetCommandeAssocie() << " est completee." << endl;
 			}
 			if (!preparation.file.front().etapes.empty())
@@ -223,7 +254,7 @@ void ListeCommandes::simulation() {
 			fin = false;
 			preparationUtilisation++;
 		}
-		if (fin == false)
+		if (fin == false && compteurCommande != listeCommandes.size())
 		{
 			min += 15;
 			cout << "15 minutes s'est ecoulee." << endl;
@@ -264,6 +295,21 @@ void ListeCommandes::ajouterTempsCommande(int temps, int commande) {
 	}
 }
 
+int ListeCommandes::ajouterCompteurLot(int commande) {
+	itC = listeCommandes.begin();
+	bool trouver = false;
+	while (!trouver) {
+		if ((*itC).GetNumCommande() == commande) {
+			(*itC).SetCompteurLot((*itC).GetCompteurLot()+1);
+			trouver = true;
+			return (*itC).GetCompteurLot();
+		}
+		else {
+			itC++;
+		}
+	}
+}
+
 void ListeCommandes::tempsMoyen() {
 	double moyenne = 0.0;
 	int total = 0;
@@ -277,10 +323,10 @@ void ListeCommandes::tempsMoyen() {
 void ListeCommandes::tempsCommandePlusLongue() {
 	int temps = listeCommandes.front().GetTemps();
 	int commande = listeCommandes.front().GetNumCommande();
-	int size = listeCommandes.front().lots.size();
+	int size = listeCommandes.front().GetSize();
 	for (itC = listeCommandes.begin(); itC != listeCommandes.end(); itC++) {
-		if (size < (*itC).lots.size()) {
-			size = (*itC).lots.size();
+		if (size < (*itC).GetSize()) {
+			size = (*itC).GetSize();
 			temps = (*itC).GetTemps();
 			commande = (*itC).GetNumCommande();
 		}

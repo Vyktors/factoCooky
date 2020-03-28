@@ -7,15 +7,15 @@ LotDeBiscuits::LotDeBiscuits()
 {
 	type = "";
 	quantite = 0;
-	dernier = false;
+	nbLotParCommande = 0;
 	commandeAssocie = 0;
 }
 
-LotDeBiscuits::LotDeBiscuits(string _type, int _quantite, bool _dernier, int _commandeAssocie)
+LotDeBiscuits::LotDeBiscuits(string _type, int _quantite, int _nbLotParCommande, int _commandeAssocie)
 {
 	type = _type;
 	quantite = _quantite;
-	dernier = _dernier;
+	nbLotParCommande = _nbLotParCommande;
 	commandeAssocie = _commandeAssocie;
 }
 
@@ -36,9 +36,9 @@ int LotDeBiscuits::GetQuantite()
 	return quantite;
 }
 
-bool LotDeBiscuits::GetDernier()
+int LotDeBiscuits::GetNbLotParCommande()
 {
-	return dernier;
+	return nbLotParCommande;
 }
 
 int LotDeBiscuits::GetCommandeAssocie()
@@ -56,9 +56,9 @@ void LotDeBiscuits::SetQuantite(int _quantite)
 	quantite = _quantite;
 }
 
-void LotDeBiscuits::SetDernier(bool _dernier)
+void LotDeBiscuits::SetNbLotParCommande(int _nbLotParCommande)
 {
-	dernier = _dernier;
+	nbLotParCommande = _nbLotParCommande;
 }
 
 void LotDeBiscuits::SetCommandeAssocie(int _commandeAssocie)
