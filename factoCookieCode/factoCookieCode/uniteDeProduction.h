@@ -8,12 +8,14 @@ class UniteDeProduction
 {
 private:
 	string nom;
+	int temps;
+
 public:
 	std::queue <LotDeBiscuits> file;
 
 	//Constructeur
 	UniteDeProduction();
-	UniteDeProduction(string);
+	UniteDeProduction(string, int);
 
 	//Destructeur
 	~UniteDeProduction();
@@ -21,7 +23,9 @@ public:
 	//Accesseurs
 	//Getters
 	string GetNom();
+	int GetTemps();
 
 	//Setters
 	void SetNom(string);
+	void SetTemps(int);
 };

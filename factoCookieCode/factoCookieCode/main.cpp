@@ -4,16 +4,20 @@ using namespace std;
 void main(){
 
 	ListeCommandes listeCo;
-	string fichierCommande, fichierRecette;
+	string fichierCommande, fichierRecette, fichierProduction;
 	bool fin = false;
 	int choix;
 
-	//cout << "Quel est le nom du fichier des commandes?" << endl;
-	//cin >> fichierCommande;
-	listeCo.chargerCommandes("COMMANDES.txt");
-	//cout << "Quel est le nom du fichier des recettes?" << endl;
-	//cin >> fichierRecette;
-	listeCo.chargerRecettes("RECETTES.txt");
+	cout << "Quel est le nom du fichier des commandes?" << endl;
+	cin >> fichierCommande;
+	listeCo.chargerCommandes(fichierCommande);
+	cout << "Quel est le nom du fichier des recettes?" << endl;
+	cin >> fichierRecette;
+	listeCo.chargerRecettes(fichierRecette);
+	cout << "Quel est le nom du fichier de production?" << endl;
+	cin >> fichierProduction;
+	listeCo.chargerProduction(fichierProduction);
+
 	cout << "Simulation : " << endl;
 	listeCo.simulation();
 	while (!fin)

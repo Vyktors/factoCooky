@@ -72,17 +72,63 @@ void ListeCommandes::chargerCommandes(string nomFichierCommandes)
 	fichierCommandes.close();
 }
 
-void ListeCommandes::chargerRecettes(string nomFichierCommandes)
+void ListeCommandes::chargerProduction(string nomFichierProduction)
 {
-	fstream fichierCommandes;
-	if (ouvreFichierE(fichierCommandes, "Fichiers/" + nomFichierCommandes))
+	fstream fichierProduction;
+	if (ouvreFichierE(fichierProduction, "Fichiers/" + nomFichierProduction))
+	{
+		string token, ligne;
+		string delimiter = " ";
+
+		size_t pos = 0;
+
+		while (getline(fichierProduction, ligne))
+		{
+			while ((pos = ligne.find(delimiter)) != std::string::npos) {
+				token = ligne.substr(0, pos);
+				ligne.erase(0, pos + delimiter.length());
+			}
+			try {
+				listeTempsProduction.insert(pair<string, int>(token, std::stoi(ligne)));
+			}
+			catch (std::invalid_argument const& e) {
+				cout << "Impossible de convertir un string en int.";
+			}
+		}
+		for (itP = listeTempsProduction.begin(); itP != listeTempsProduction.end(); itP++) {
+			if ((*itP).first == "Preparation") {
+				preparation.SetTemps((*itP).second);
+			}
+			else {
+				if ((*itP).first == "Melange") {
+					melange.SetTemps((*itP).second);
+				}
+				else{
+					if ((*itP).first == "Cuisson") {
+						cuisson.SetTemps((*itP).second);
+					}
+					else {
+						emballage.SetTemps((*itP).second);
+					}
+				}
+			}
+			
+		}
+	}
+	fichierProduction.close();
+}
+
+void ListeCommandes::chargerRecettes(string nomFichierRecettes)
+{
+	fstream fichierRecettes;
+	if (ouvreFichierE(fichierRecettes, "Fichiers/" + nomFichierRecettes))
 	{
 		int index = 0;
 		string ligne;
 		string typeTemp;
 		Recette recetteTemp;
 
-		while (getline(fichierCommandes, ligne))
+		while (getline(fichierRecettes, ligne))
 		{
 			if (ligne == "&") {
 
@@ -110,7 +156,7 @@ void ListeCommandes::chargerRecettes(string nomFichierCommandes)
 			index++;
 		}
 	}
-	fichierCommandes.close();
+	fichierRecettes.close();
 }
 
 bool ListeCommandes::ouvreFichierE(fstream& fichier, string nomFichier)
@@ -128,11 +174,15 @@ void ListeCommandes::simulation() {
 	bool fin = false;
 	int min = 0;
 	string uniteTemp;
-
+	compteurPreparation = preparation.GetTemps();
+	compteurMelange = melange.GetTemps();
+	compteurCuisson = cuisson.GetTemps();
+	compteurEmballage = emballage.GetTemps();
 
 	while (!fin) {
 
 		fin = true;
+
 		// Envoyer le premier lot de chaque commande à leur première étape toutes les 15 minutes afin de ne pas surcharger les files.
 		for (itC = listeCommandes.begin(); itC != listeCommandes.end(); itC++){
 			if (!(*itC).lots.empty())
@@ -145,9 +195,10 @@ void ListeCommandes::simulation() {
 				(*itC).lots.pop_front();
 			}
 		}
-		if (!emballage.file.empty())
+		if (!emballage.file.empty() && compteurEmballage == 15)
 		{
 			compteurTemp = 0;
+			compteurEmballage = emballage.GetTemps();
 			if (emballage.file.front().etapes.size() == 0) {
 				compteurTemp = ajouterCompteurLot(emballage.file.front().GetCommandeAssocie());
 				cout << "Le lot de biscuit " << emballage.file.front().GetType() << " de la commande " << emballage.file.front().GetCommandeAssocie() <<
@@ -163,7 +214,13 @@ void ListeCommandes::simulation() {
 				cout << "Le lot de biscuit " << emballage.file.front().GetType() << " de la commande " << emballage.file.front().GetCommandeAssocie() <<
 				" a ete envoye a l'unite de production : " << emballage.file.front().etapes.front() << endl;
 				uniteTemp = emballage.file.front().etapes.front();
-				if ((uniteTemp == "Cuisson" && cuisson.file.size() == 0) || (uniteTemp == "Melange" && melange.file.size() == 0) || (uniteTemp == "Preparation" && preparation.file.size() == 0)) {
+				if (uniteTemp == "Cuisson" && cuisson.file.size() == 0) {
+					excepetion = true;
+				}
+				if (uniteTemp == "Melange" && melange.file.size() == 0) {
+					excepetion = true;
+				}
+				if (uniteTemp == "Preparation" && preparation.file.size() == 0) {
 					excepetion = true;
 				}
 				emballage.file.front().etapes.pop_front();
@@ -173,9 +230,16 @@ void ListeCommandes::simulation() {
 			fin = false;
 			emballageUtilisation++;
 		}
-		if (!cuisson.file.empty() && excepetion == false)
+		else {
+			if (!emballage.file.empty()) {
+				compteurEmballage = compteurEmballage - 15;
+				fin = false;
+			}
+		}
+		if (!cuisson.file.empty() && excepetion == false && compteurCuisson == 15)
 		{
 			compteurTemp = 0;
+			compteurCuisson = cuisson.GetTemps();
 			if (cuisson.file.front().etapes.size() == 0) {
 				compteurTemp = ajouterCompteurLot(cuisson.file.front().GetCommandeAssocie());
 				cout << "Le lot de biscuit " << cuisson.file.front().GetType() << " de la commande " << cuisson.file.front().GetCommandeAssocie() <<
@@ -191,7 +255,10 @@ void ListeCommandes::simulation() {
 				cout << "Le lot de biscuit " << cuisson.file.front().GetType() << " de la commande " << cuisson.file.front().GetCommandeAssocie() <<
 					" a ete envoye a l'unite de production : " << cuisson.file.front().etapes.front() << endl; 
 				uniteTemp = cuisson.file.front().etapes.front();
-				if ((uniteTemp == "Melange" && melange.file.size()==0) || (uniteTemp == "Preparation" && preparation.file.size() == 0)) {
+				if (uniteTemp == "Melange" && melange.file.size()==0) {
+					excepetion = true;
+				}
+				if (uniteTemp == "Preparation" && preparation.file.size() == 0) {
 					excepetion = true;
 				}
 				cuisson.file.front().etapes.pop_front();
@@ -201,9 +268,20 @@ void ListeCommandes::simulation() {
 			fin = false;
 			cuissonUtilisation++;
 		}
-		if (!melange.file.empty() && excepetion == false)
+		else {
+			if (!cuisson.file.empty() && excepetion != true) {
+				compteurCuisson = compteurCuisson - 15;
+				fin = false;
+			}
+			if (!cuisson.file.empty() && excepetion == true) {
+				fin = false;
+				excepetion = false;
+			}
+		}
+		if (!melange.file.empty() && excepetion == false && compteurMelange == 15)
 		{
 			compteurTemp = 0;
+			compteurMelange = melange.GetTemps();
 			if (melange.file.front().etapes.size() == 0) {
 				compteurTemp = ajouterCompteurLot(melange.file.front().GetCommandeAssocie());
 				cout << "Le lot de biscuit " << melange.file.front().GetType() << " de la commande " << melange.file.front().GetCommandeAssocie() <<
@@ -229,9 +307,20 @@ void ListeCommandes::simulation() {
 			fin = false;
 			melangeUtilisation++;
 		}
-		if (!preparation.file.empty() && excepetion == false)
+		else {
+			if (!melange.file.empty() && excepetion != true) {
+				compteurMelange = compteurMelange - 15;
+				fin = false;
+			}
+			if (!melange.file.empty() && excepetion == true) {
+				fin = false;
+				excepetion = false;
+			}
+		}
+		if (!preparation.file.empty() && excepetion == false && compteurPreparation == 15)
 		{
 			compteurTemp = 0;
+			compteurPreparation = preparation.GetTemps();
 			if (preparation.file.front().etapes.size() == 0) {
 				compteurTemp = ajouterCompteurLot(preparation.file.front().GetCommandeAssocie());
 				cout << "Le lot de biscuit " << preparation.file.front().GetType() << " de la commande " << preparation.file.front().GetCommandeAssocie() <<
@@ -253,6 +342,17 @@ void ListeCommandes::simulation() {
 			preparation.file.pop();
 			fin = false;
 			preparationUtilisation++;
+		}
+		else {
+			if (!preparation.file.empty() && excepetion != true) {
+				compteurPreparation = compteurPreparation - 15;
+				fin = false;
+			}
+			if (!preparation.file.empty() && excepetion == true) {
+				fin = false;
+				excepetion = false;
+			}
+
 		}
 		if (fin == false && compteurCommande != listeCommandes.size())
 		{

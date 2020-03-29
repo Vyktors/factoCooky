@@ -26,8 +26,8 @@ string Recette::GetTypeBiscuit()
 	return typeBiscuit;
 }
 
-
 void Recette::SetTypeBiscuit(string _typeBiscuit)
 {
 	typeBiscuit = _typeBiscuit;
 }
+
