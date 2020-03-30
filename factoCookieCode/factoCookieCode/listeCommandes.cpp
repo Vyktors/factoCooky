@@ -431,17 +431,15 @@ void ListeCommandes::tempsMoyen() {
 }
 
 void ListeCommandes::tempsCommandePlusLongue() {
-	int temps = listeCommandes.front().GetTemps();
+	int tempsMax = listeCommandes.front().GetTemps();
 	int commande = listeCommandes.front().GetNumCommande();
-	int size = listeCommandes.front().GetSize();
 	for (itC = listeCommandes.begin(); itC != listeCommandes.end(); itC++) {
-		if (size < (*itC).GetSize()) {
-			size = (*itC).GetSize();
-			temps = (*itC).GetTemps();
+		if (tempsMax < (*itC).GetTemps()) {
+			tempsMax = (*itC).GetTemps();
 			commande = (*itC).GetNumCommande();
 		}
 	}
-	cout << "La commande la plus longue est la commande "<<commande<<" et a ete effectuee en " << temps << " minutes." << endl;
+	cout << "La commande la plus longue a ete la commande " << commande << " qui a ete effectuee en " << tempsMax << " minutes." << endl;
 }
 	
 
