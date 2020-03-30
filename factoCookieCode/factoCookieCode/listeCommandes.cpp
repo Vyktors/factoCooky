@@ -12,7 +12,7 @@ ListeCommandes::~ListeCommandes()
 	
 }
 
-void ListeCommandes::chargerCommandes(string nomFichierCommandes)
+bool ListeCommandes::chargerCommandes(string nomFichierCommandes)
 {
 	fstream fichierCommandes;
 	if (ouvreFichierE(fichierCommandes, "Fichiers/" + nomFichierCommandes))
@@ -68,11 +68,14 @@ void ListeCommandes::chargerCommandes(string nomFichierCommandes)
 				(*itLDB).SetNbLotParCommande((*itC).lots.size());
 			}
 		}
+		fichierCommandes.close();
+		return true;
 	}
 	fichierCommandes.close();
+	return false;
 }
 
-void ListeCommandes::chargerProduction(string nomFichierProduction)
+bool ListeCommandes::chargerProduction(string nomFichierProduction)
 {
 	fstream fichierProduction;
 	if (ouvreFichierE(fichierProduction, "Fichiers/" + nomFichierProduction))
@@ -114,11 +117,15 @@ void ListeCommandes::chargerProduction(string nomFichierProduction)
 			}
 			
 		}
+		fichierProduction.close();
+		return true;
+			
 	}
 	fichierProduction.close();
+	return false;
 }
 
-void ListeCommandes::chargerRecettes(string nomFichierRecettes)
+bool ListeCommandes::chargerRecettes(string nomFichierRecettes)
 {
 	fstream fichierRecettes;
 	if (ouvreFichierE(fichierRecettes, "Fichiers/" + nomFichierRecettes))
@@ -155,8 +162,11 @@ void ListeCommandes::chargerRecettes(string nomFichierRecettes)
 			}
 			index++;
 		}
+		fichierRecettes.close();
+		return true;
 	}
 	fichierRecettes.close();
+	return false;
 }
 
 bool ListeCommandes::ouvreFichierE(fstream& fichier, string nomFichier)

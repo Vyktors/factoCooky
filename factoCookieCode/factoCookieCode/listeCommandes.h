@@ -15,10 +15,11 @@ class ListeCommandes {
 public:
 	ListeCommandes();
 	~ListeCommandes();
-	void chargerCommandes(string);
+	bool chargerCommandes(string);
 	bool ouvreFichierE(fstream& fichier, string nomFichier);
+	bool chargerProduction(string);
+	bool chargerRecettes(string);
 	void simulation();
-	void chargerRecettes(string);
 	void uniteSuivante(string, LotDeBiscuits);
 	void ajouterTempsCommande(int, int);
 	void tempsMoyen();
@@ -27,8 +28,6 @@ public:
 	void unitePlusUtilisee();
 	void uniteMoinsUtilisee();
 	int ajouterCompteurLot(int);
-	void chargerProduction(string);
-	
 
 private:
 	std::list<Commande> listeCommandes;
