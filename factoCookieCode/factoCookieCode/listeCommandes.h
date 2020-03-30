@@ -44,7 +44,7 @@ private:
 	int melangeUtilisation = 0;
 	int cuissonUtilisation = 0;
 	int emballageUtilisation = 0;
-	bool excepetion = false;
+	bool exception = false;
 	int compteurTemp = 0;
 	int compteurCommande = 0;
 	int compteurPreparation = 0;

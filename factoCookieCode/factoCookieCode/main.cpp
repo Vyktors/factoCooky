@@ -29,7 +29,7 @@ void main(){
 	{
 		cout << "Que souhaitez-vous faire?" << endl << 
 			"1. Savoir le temps moyen pour completer une commande." << endl <<
-			"2. Savoir combien de temps la commande la plus longue a-t-elle ete effectuee.\n" << endl <<
+			"2. Savoir combien de temps la commande la plus longue a-t-elle ete effectuee." << endl <<
 			"3. Savoir quelle a ete la commande la plus rapide." << endl <<
 			"4. Savoir quelle unite de production est la plus utilisee." << endl <<
 			"5. Savoir quelle unite de production est la moins utilisee." << endl <<

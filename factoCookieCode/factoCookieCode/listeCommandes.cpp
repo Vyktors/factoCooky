@@ -225,13 +225,13 @@ void ListeCommandes::simulation() {
 				" a ete envoye a l'unite de production : " << emballage.file.front().etapes.front() << endl;
 				uniteTemp = emballage.file.front().etapes.front();
 				if (uniteTemp == "Cuisson" && cuisson.file.size() == 0) {
-					excepetion = true;
+					exception = true;
 				}
 				if (uniteTemp == "Melange" && melange.file.size() == 0) {
-					excepetion = true;
+					exception = true;
 				}
 				if (uniteTemp == "Preparation" && preparation.file.size() == 0) {
-					excepetion = true;
+					exception = true;
 				}
 				emballage.file.front().etapes.pop_front();
 				uniteSuivante(uniteTemp,emballage.file.front());
@@ -246,7 +246,7 @@ void ListeCommandes::simulation() {
 				fin = false;
 			}
 		}
-		if (!cuisson.file.empty() && excepetion == false && compteurCuisson == 15)
+		if (!cuisson.file.empty() && exception == false && compteurCuisson == 15)
 		{
 			compteurTemp = 0;
 			compteurCuisson = cuisson.GetTemps();
@@ -266,10 +266,10 @@ void ListeCommandes::simulation() {
 					" a ete envoye a l'unite de production : " << cuisson.file.front().etapes.front() << endl; 
 				uniteTemp = cuisson.file.front().etapes.front();
 				if (uniteTemp == "Melange" && melange.file.size()==0) {
-					excepetion = true;
+					exception = true;
 				}
 				if (uniteTemp == "Preparation" && preparation.file.size() == 0) {
-					excepetion = true;
+					exception = true;
 				}
 				cuisson.file.front().etapes.pop_front();
 				uniteSuivante(uniteTemp, cuisson.file.front());
@@ -279,16 +279,16 @@ void ListeCommandes::simulation() {
 			cuissonUtilisation++;
 		}
 		else {
-			if (!cuisson.file.empty() && excepetion != true) {
+			if (!cuisson.file.empty() && exception != true) {
 				compteurCuisson = compteurCuisson - 15;
 				fin = false;
 			}
-			if (!cuisson.file.empty() && excepetion == true) {
+			if (!cuisson.file.empty() && exception == true) {
 				fin = false;
-				excepetion = false;
+				exception = false;
 			}
 		}
-		if (!melange.file.empty() && excepetion == false && compteurMelange == 15)
+		if (!melange.file.empty() && exception == false && compteurMelange == 15)
 		{
 			compteurTemp = 0;
 			compteurMelange = melange.GetTemps();
@@ -308,7 +308,7 @@ void ListeCommandes::simulation() {
 					" a ete envoye a l'unite de production : " << melange.file.front().etapes.front() << endl; 
 				uniteTemp = melange.file.front().etapes.front();
 				if (uniteTemp == "Preparation" && preparation.file.size() == 0) {
-					excepetion = true;
+					exception = true;
 				}
 				melange.file.front().etapes.pop_front();
 				uniteSuivante(uniteTemp, melange.file.front());
@@ -318,16 +318,16 @@ void ListeCommandes::simulation() {
 			melangeUtilisation++;
 		}
 		else {
-			if (!melange.file.empty() && excepetion != true) {
+			if (!melange.file.empty() && exception != true) {
 				compteurMelange = compteurMelange - 15;
 				fin = false;
 			}
-			if (!melange.file.empty() && excepetion == true) {
+			if (!melange.file.empty() && exception == true) {
 				fin = false;
-				excepetion = false;
+				exception = false;
 			}
 		}
-		if (!preparation.file.empty() && excepetion == false && compteurPreparation == 15)
+		if (!preparation.file.empty() && exception == false && compteurPreparation == 15)
 		{
 			compteurTemp = 0;
 			compteurPreparation = preparation.GetTemps();
@@ -354,13 +354,13 @@ void ListeCommandes::simulation() {
 			preparationUtilisation++;
 		}
 		else {
-			if (!preparation.file.empty() && excepetion != true) {
+			if (!preparation.file.empty() && exception != true) {
 				compteurPreparation = compteurPreparation - 15;
 				fin = false;
 			}
-			if (!preparation.file.empty() && excepetion == true) {
+			if (!preparation.file.empty() && exception == true) {
 				fin = false;
-				excepetion = false;
+				exception = false;
 			}
 
 		}
