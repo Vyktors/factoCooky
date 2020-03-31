@@ -1,4 +1,8 @@
 Preparation 15
 Melange 15
 Cuisson 15
+<<<<<<< HEAD
 Emballage 15
+=======
+Emballage 15
+>>>>>>> bonus
