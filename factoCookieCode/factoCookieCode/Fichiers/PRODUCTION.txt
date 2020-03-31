@@ -1,4 +1,4 @@
 Preparation 15
 Melange 15
-Cuisson 45
-Emballage 30
+Cuisson 15
+Emballage 15
