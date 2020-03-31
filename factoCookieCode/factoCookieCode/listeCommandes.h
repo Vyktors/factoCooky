@@ -38,9 +38,9 @@ private:
 	std::map<string, int>::iterator itP;
 	UniteDeProduction* ptr = NULL;
 	int* utilisation = NULL;
-	bool exception = false;
 	int compteurTemp = 0;
 	int compteurCommande = 0;
 	int* cptUnite = NULL;
+	bool* exception = NULL;
 
 };

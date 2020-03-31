@@ -174,8 +174,11 @@ void ListeCommandes::simulation() {
 	string uniteTemp;
 	cptUnite = new int[listeProduction.size()];
 	utilisation = new int[listeProduction.size()];
+	exception = new bool[listeProduction.size()];
 	for (i = 0; i < listeProduction.size(); i++) {
 		cptUnite[i] = ptr[i].GetTemps();
+		utilisation[i] = 0;
+		exception[i] = false;
 	}
 
 	while (!fin) {
@@ -195,7 +198,7 @@ void ListeCommandes::simulation() {
 			}
 		}
 		for (i = 0; i < listeProduction.size(); i++) {
-			if (!ptr[i].file.empty() && exception == false && cptUnite[i] == 15)
+			if (!ptr[i].file.empty() && exception[i] == false && cptUnite[i] == 15)
 			{
 				compteurTemp = 0;
 				cptUnite[i] = ptr[i].GetTemps();
@@ -216,7 +219,7 @@ void ListeCommandes::simulation() {
 					uniteTemp = ptr[i].file.front().etapes.front();
 					for (j = i + 1; j < listeProduction.size(); j++) {
 						if (uniteTemp == ptr[j].GetNom() && ptr[j].file.size() == 0) {
-							exception = true;
+							exception[j] = true;
 						}
 					}
 					ptr[i].file.front().etapes.pop_front();
@@ -227,13 +230,13 @@ void ListeCommandes::simulation() {
 				utilisation[i]++;
 			}
 			else {
-				if (!ptr[i].file.empty() && exception != true) {
+				if (!ptr[i].file.empty() && exception[i] != true) {
 					cptUnite[i] = cptUnite[i] - 15;
 					fin = false;
 				}
-				if (!ptr[i].file.empty() && exception == true) {
+				if (!ptr[i].file.empty() && exception[i] == true) {
 					fin = false;
-					exception = false;
+					exception[i] = false;
 				}
 			}
 		}
@@ -294,17 +297,15 @@ void ListeCommandes::tempsMoyen() {
 }
 
 void ListeCommandes::tempsCommandePlusLongue() {
-	int temps = listeCommandes.front().GetTemps();
+	int tempsMax = listeCommandes.front().GetTemps();
 	int commande = listeCommandes.front().GetNumCommande();
-	int size = listeCommandes.front().GetSize();
 	for (itC = listeCommandes.begin(); itC != listeCommandes.end(); itC++) {
-		if (size < (*itC).GetSize()) {
-			size = (*itC).GetSize();
-			temps = (*itC).GetTemps();
+		if (tempsMax < (*itC).GetTemps()) {
+			tempsMax = (*itC).GetTemps();
 			commande = (*itC).GetNumCommande();
 		}
 	}
-	cout << "La commande la plus longue est la commande "<<commande<<" et a ete effectuee en " << temps << " minutes." << endl;
+	cout << "La commande la plus longue est la commande "<<commande<<" et a ete effectuee en " << tempsMax << " minutes." << endl;
 }
 	
 
