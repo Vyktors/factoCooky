@@ -305,11 +305,7 @@ void ListeCommandes::tempsCommandePlusLongue() {
 			commande = (*itC).GetNumCommande();
 		}
 	}
-<<<<<<< HEAD
 	cout << "La commande la plus longue a ete la commande " << commande << " qui a ete effectuee en " << tempsMax << " minutes." << endl;
-=======
-	cout << "La commande la plus longue est la commande "<<commande<<" et a ete effectuee en " << tempsMax << " minutes." << endl;
->>>>>>> bonus
 }
 	
 
