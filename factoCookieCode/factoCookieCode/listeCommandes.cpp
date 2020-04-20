@@ -181,11 +181,25 @@ void ListeCommandes::simulation() {
 		exception[i] = false;
 	}
 
+	//Envoyer tous les lots de toutes les commandes à leur première étape.
+	// /*
+	for (itC = listeCommandes.begin(); itC != listeCommandes.end(); itC++) {
+		for (itLDB = (*itC).lots.begin(); itLDB != (*itC).lots.end(); itLDB++) {
+			cout << "Le lot de biscuit " << (*itLDB).GetType() << " de la commande " << (*itC).GetNumCommande() <<
+				" a ete envoye a l'unite de production : " << (*itLDB).etapes.front() << endl;
+			uniteTemp = (*itLDB).etapes.front();
+			(*itLDB).etapes.pop_front();
+			uniteSuivante(uniteTemp, (*itLDB));
+		}
+	}
+	//  */
+
 	while (!fin) {
 
 		fin = true;
 
 		// Envoyer le premier lot de chaque commande à leur première étape toutes les 15 minutes afin de ne pas surcharger les files.
+		/*
 		for (itC = listeCommandes.begin(); itC != listeCommandes.end(); itC++){
 			if (!(*itC).lots.empty())
 			{
@@ -197,6 +211,7 @@ void ListeCommandes::simulation() {
 				(*itC).lots.pop_front();
 			}
 		}
+		*/
 		for (i = 0; i < listeProduction.size(); i++) {
 			if (!ptr[i].file.empty() && exception[i] == false && cptUnite[i] == 15)
 			{
